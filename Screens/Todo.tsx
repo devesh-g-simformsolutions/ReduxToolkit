@@ -10,20 +10,19 @@ import {
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  // addTask,
-  // deleteTask,
-  updateName,
-  updateNumber,
-} from '../redux/taskSlice';
+import {useSelector} from 'react-redux';
+import // addTask,
+// deleteTask,
+// updateName,
+// updateNumber,
+'../redux/taskSlice';
 // import {nanoid} from '@reduxjs/toolkit';
 // import ReactNativeModuleAddContact from '../ReactNativeModuleAddContact';
 import {NativeModules} from 'react-native';
 import ReactNativeModuleContacts from '../ReactNativeModuleContacts';
 
 const Todo = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   // const onSubmitTask = () => {
   //   if (myName.trim().length === 0) {
@@ -44,59 +43,53 @@ const Todo = () => {
   //   setIsContactVisible(false);
   // };
 
-  const onUpdateName = (id: string) => {
-    setEditableInput(true);
+  // const onUpdateName = (id: string) => {
+  //   setEditableInput(true);
 
-    if (myName.trim().length === 0 && myNumber.trim().length === 0) {
-      setEditableInput(false);
-      return;
-    }
-    dispatch(
-      updateName({
-        id: id,
-        name: editedContactName,
-      }),
-    );
-    setEditableInput(false);
-  };
-  const onUpdateNumber = (id: string) => {
-    setEditableInput(true);
-    if (myName.trim().length === 0 && myNumber.trim().length === 0) {
-      setEditableInput(false);
-      return;
-    }
-    dispatch(
-      updateNumber({
-        id: id,
-        number: editedContactNumber,
-      }),
-    );
-    setEditableInput(false);
-  };
+  //   if (myName.trim().length === 0 && myNumber.trim().length === 0) {
+  //     setEditableInput(false);
+  //     return;
+  //   }
+  //   dispatch(
+  //     updateName({
+  //       id: id,
+  //       name: editedContactName,
+  //     }),
+  //   );
+  //   setEditableInput(false);
+  // };
+  // const onUpdateNumber = (id: string) => {
+  //   setEditableInput(true);
+  //   if (myName.trim().length === 0 && myNumber.trim().length === 0) {
+  //     setEditableInput(false);
+  //     return;
+  //   }
+  //   dispatch(
+  //     updateNumber({
+  //       id: id,
+  //       number: editedContactNumber,
+  //     }),
+  //   );
+  //   setEditableInput(false);
+  // };
 
   // const itemDelete = (id: string) => {
   //   dispatch(deleteTask({id: id}));
   // };
 
   const [myName, setMyName] = React.useState('');
+  const [myUpdatedName, setMyUpdatedName] = React.useState('');
   const [myNumber, setMyNumber] = React.useState('');
-  const [editedContactName, setEditedContactName] = React.useState('');
-  const [editedContactNumber, setEditedContactNumber] = React.useState('');
-  const [editableInput, setEditableInput] = React.useState(false);
+  const [myUpdatedNumber, setMyUpdateNumber] = React.useState('');
+  // const [editedContactName, setEditedContactName] = React.useState('');
+  // const [editedContactNumber, setEditedContactNumber] = React.useState('');
+  // const [editableInput, setEditableInput] = React.useState(false);
   const [isAddContactVisible, setIsContactVisible] = React.useState(false);
   const [isAddContactUpdateVisible, setIsContactUpdateVisible] =
     React.useState(false);
   const [contactsFromIos, setContactFromIos] = React.useState([]);
 
   const contacts = useSelector((state: any) => state.tasks);
-
-  // const onPressIos = (value: any) => {
-  //   console.log('contact value>>>>> ', value);
-  // };
-
-  NativeModules?.EditContacts?.fetchContacts((value: any) =>
-    setContactFromIos(value),
-  );
 
   const ContactHeader = () => {
     return (
@@ -118,37 +111,59 @@ const Todo = () => {
           }}>
           Contact List
         </Text>
-        <View style={{flexDirection: 'row'}}>
-          {Platform.OS === 'android' && (
-            <TouchableOpacity
-              style={{marginRight: 10}}
-              onPress={() => {
-                ReactNativeModuleContacts.editContact();
-              }}>
-              <Icon name="edit" size={30} color="white" />
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            // onPress={
-            //   Platform.OS === 'android'
-            //     ? ReactNativeModuleAddContact.addContact()
-            //     : setIsAddContactVisible(true)
-            // }
-            onPress={() => setIsContactVisible(true)}>
-            <Icon name="adduser" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
       </View>
     );
   };
 
-  const [selectedId, setSelectedId] = React.useState(null);
+  // const [selectedId, setSelectedId] = React.useState(null);
+
+  const onPressAddContactAndroid = () => {
+    NativeModules.AddContact.addContact();
+  };
+
+  const onPressAddButtonIos = () => {
+    if (isAddContactVisible) {
+      setIsContactVisible(false);
+    } else {
+      setIsContactVisible(true);
+    }
+
+    if (isAddContactUpdateVisible) {
+      setIsContactUpdateVisible(false);
+    }
+  };
+
+  const onPressUpdateButtonIos = () => {
+    if (isAddContactUpdateVisible) {
+      setIsContactUpdateVisible(false);
+    } else {
+      setIsContactUpdateVisible(true);
+    }
+
+    if (isAddContactVisible) {
+      setIsContactVisible(false);
+    }
+  };
+
+  const onPressUpdateContactAndroid = () => {
+    ReactNativeModuleContacts.editContact();
+  };
+
+  const updateIosContactList = () => {
+    NativeModules?.EditContacts?.fetchContacts(
+      (value: any) => setContactFromIos(value), ///here need to be add reload
+    );
+  };
+
+  React.useEffect(() => {
+    updateIosContactList();
+  }, [myName, myNumber]);
 
   const reanderItem = ({item}: any) => {
-    const onPress = () => {
-      setSelectedId(item.id);
-      setEditableInput(true);
-    };
+    // const onPress = () => {
+    //   setSelectedId(item.id);
+    //   setEditableInput(true);
+    // };
     return (
       <View
         style={{
@@ -167,24 +182,19 @@ const Todo = () => {
             <TextInput
               style={{width: '100%', fontWeight: '900', fontSize: 20}}
               defaultValue={item?.name}
-              // editable={item.id === selectedId && editableInput}
               editable={false}
-              onSubmitEditing={() => onUpdateName(item.id)}
-              onChangeText={text => setEditedContactName(text)}
+              // onSubmitEditing={() => onUpdateName(item.id)}
+              // onChangeText={text => setEditedContactName(text)}
             />
             <TextInput
               style={{width: '100%', fontWeight: '600', fontSize: 20}}
               defaultValue={item?.number}
-              // editable={item.id === selectedId && editableInput}
               editable={false}
-              onSubmitEditing={() => onUpdateNumber(item.id)}
-              onChangeText={text => setEditedContactNumber(text)}
+              // onSubmitEditing={() => onUpdateNumber(item.id)}
+              // onChangeText={text => setEditedContactNumber(text)}
             />
           </View>
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity style={{marginRight: 10}} onPress={onPress}>
-              <Icon name="edit" size={30} color="#ff4081" />
-            </TouchableOpacity>
             <TouchableOpacity
               onPress={() =>
                 NativeModules?.EditContacts?.deleteContacts(
@@ -192,8 +202,10 @@ const Todo = () => {
                   (value: any) => {
                     if (value) {
                       console.log('DELTED');
+                      updateIosContactList();
                     } else {
                       console.log('NOT DELETED');
+                      updateIosContactList();
                     }
                   },
                 )
@@ -207,166 +219,194 @@ const Todo = () => {
   };
 
   return (
-    <View>
-      <ContactHeader />
-      <View
-        style={{
-          flexDirection: 'row',
-          borderWidth: 2,
-          alignItems: 'center',
-          alignSelf: 'center',
-          alignContent: 'space-between',
-          justifyContent: 'space-between',
-          marginTop: 20,
-        }}>
-        <TouchableOpacity
-          style={{paddingHorizontal: 20}}
-          activeOpacity={0.5}
-          onPress={() =>
-            isAddContactVisible
-              ? setIsContactVisible(false)
-              : setIsContactVisible(true)
-          }>
-          <Icon name="edit" size={30} color="#ff4081" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{paddingHorizontal: 20}}
-          activeOpacity={0.5}
-          onPress={() =>
-            //edit this accouding to need of update and add
-            isAddContactUpdateVisible
-              ? setIsContactUpdateVisible(false)
-              : setIsContactUpdateVisible(true)
-          }>
-          <Icon name="adduser" size={30} color="#ff4081" />
-        </TouchableOpacity>
-      </View>
-      {isAddContactVisible && (
-        <>
-          <TextInput
-            value={myName}
-            placeholder={'Contact Name'}
-            onChangeText={text => {
-              setMyName(text);
-            }}
-            style={{
-              borderColor: 'black',
-              borderBottomWidth: 2,
-              borderRadius: 10,
-              margin: 20,
-              marginBottom: 0,
-              paddingHorizontal: 20,
-              paddingBottom: 10,
-              fontWeight: '800',
-              fontSize: 20,
-            }}
-          />
-          <TextInput
-            value={myNumber}
-            keyboardType={'number-pad'}
-            placeholder={'Contact Number'}
-            onChangeText={text => {
-              setMyNumber(text);
-            }}
-            style={{
-              borderColor: 'black',
-              borderBottomWidth: 2,
-              borderRadius: 10,
-              margin: 20,
-              paddingHorizontal: 20,
-              paddingBottom: 10,
-              fontWeight: '800',
-              fontSize: 20,
-            }}
-          />
-          <View style={{padding: 20}}>
-            <Button
-              color={'#ff4081'}
-              title={'Add Contact'}
-              // onPress={onSubmitTask}
-              onPress={() =>
-                NativeModules.EditContacts.addUserToContact(
-                  myName,
-                  myNumber,
-                  (value: any) => {
-                    if (value) {
-                      console.log('User Added Successfully');
-                    } else {
-                      console.log('User Not Added');
-                    }
-                  },
-                )
-              }
-            />
-          </View>
-        </>
-      )}
-      {isAddContactUpdateVisible && (
-        <>
-          <TextInput
-            value={myName}
-            placeholder={'Contact Name'}
-            onChangeText={text => {
-              setMyName(text);
-            }}
-            style={{
-              borderColor: 'black',
-              borderBottomWidth: 2,
-              borderRadius: 10,
-              margin: 20,
-              marginBottom: 0,
-              paddingHorizontal: 20,
-              paddingBottom: 10,
-              fontWeight: '800',
-              fontSize: 20,
-            }}
-          />
-          <TextInput
-            value={myNumber}
-            keyboardType={'number-pad'}
-            placeholder={'Contact Number'}
-            onChangeText={text => {
-              setMyNumber(text);
-            }}
-            style={{
-              borderColor: 'black',
-              borderBottomWidth: 2,
-              borderRadius: 10,
-              margin: 20,
-              paddingHorizontal: 20,
-              paddingBottom: 10,
-              fontWeight: '800',
-              fontSize: 20,
-            }}
-          />
-          <View style={{padding: 20}}>
-            <Button
-              color={'#ff4081'}
-              title={'Update Contact'}
-              // onPress={onSubmitTask}
-              onPress={() => {}} /// update contact onpress
-            />
-          </View>
-        </>
-      )}
-      {contactsFromIos.length === 0 && (
-        <Text
+    <View style={{height: '100%'}}>
+      <View>
+        <ContactHeader />
+
+        <View
           style={{
+            flexDirection: 'row',
+            borderWidth: 2,
+            alignItems: 'center',
             alignSelf: 'center',
-            fontWeight: '600',
-            fontSize: 20,
-            paddingTop: 20,
+            alignContent: 'space-between',
+            justifyContent: 'space-between',
+            marginTop: 20,
+            marginBottom: 20,
+            borderRadius: 10,
+            backgroundColor: '#ff4081',
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            height: 40,
           }}>
-          Empty! Add Contact first
-        </Text>
-      )}
+          <TouchableOpacity
+            style={{paddingHorizontal: 20}}
+            activeOpacity={0.5}
+            onPress={() => {
+              Platform.OS === 'ios'
+                ? onPressUpdateButtonIos()
+                : onPressUpdateContactAndroid();
+            }}>
+            <Icon name="edit" size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{paddingHorizontal: 20}}
+            activeOpacity={0.5}
+            onPress={() => {
+              Platform.OS === 'ios'
+                ? onPressAddButtonIos()
+                : onPressAddContactAndroid();
+            }}
+            //edit this accouding to need of update and add
+          >
+            <Icon name="adduser" size={30} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        {isAddContactVisible && (
+          <>
+            <TextInput
+              value={myName}
+              placeholder={'New Contact Name'}
+              onChangeText={text => {
+                setMyName(text);
+              }}
+              style={{
+                borderColor: 'black',
+                borderBottomWidth: 2,
+                borderRadius: 10,
+                margin: 20,
+                marginBottom: 0,
+                paddingHorizontal: 20,
+                paddingBottom: 10,
+                fontWeight: '800',
+                fontSize: 20,
+              }}
+            />
+            <TextInput
+              value={myNumber}
+              keyboardType={'number-pad'}
+              placeholder={'New Contact Number'}
+              onChangeText={text => {
+                setMyNumber(text);
+              }}
+              style={{
+                borderColor: 'black',
+                borderBottomWidth: 2,
+                borderRadius: 10,
+                margin: 20,
+                paddingHorizontal: 20,
+                paddingBottom: 10,
+                fontWeight: '800',
+                fontSize: 20,
+              }}
+            />
+            <View style={{padding: 20}}>
+              <Button
+                color={'#ff4081'}
+                title={'Add Contact'}
+                // onPress={onSubmitTask}
+                onPress={() => {
+                  NativeModules.EditContacts.addUserToContact(
+                    myName.length === 0 ? 'No name' : myName,
+                    myNumber.length === 0 ? 'No Number' : myNumber,
+                    (value: any) => {
+                      if (value) {
+                        console.log('User Added Successfully');
+                        updateIosContactList();
+                      } else {
+                        console.log('User Not Added');
+                        updateIosContactList();
+                      }
+                    },
+                  );
+                }}
+              />
+            </View>
+          </>
+        )}
+        {isAddContactUpdateVisible && (
+          <>
+            <TextInput
+              value={myUpdatedName}
+              placeholder={'Contact Name'}
+              onChangeText={text => {
+                setMyUpdatedName(text);
+              }}
+              style={{
+                borderColor: 'black',
+                borderBottomWidth: 2,
+                borderRadius: 10,
+                margin: 20,
+                marginBottom: 0,
+                paddingHorizontal: 20,
+                paddingBottom: 10,
+                fontWeight: '800',
+                fontSize: 20,
+              }}
+            />
+            <TextInput
+              value={myUpdatedNumber}
+              keyboardType={'number-pad'}
+              placeholder={'Add new Contact Number'}
+              onChangeText={text => {
+                setMyUpdateNumber(text);
+              }}
+              style={{
+                borderColor: 'black',
+                borderBottomWidth: 2,
+                borderRadius: 10,
+                margin: 20,
+                paddingHorizontal: 20,
+                paddingBottom: 10,
+                fontWeight: '800',
+                fontSize: 20,
+              }}
+            />
+            <View style={{padding: 20}}>
+              <Button
+                color={'#ff4081'}
+                title={'Update Contact'}
+                // onPress={onSubmitTask}
+                onPress={() => {
+                  NativeModules.EditContacts.updateContacts(
+                    myUpdatedName.length === 0 ? 'No name' : myUpdatedName,
+                    myUpdatedNumber.length === 0
+                      ? 'No Number'
+                      : myUpdatedNumber,
+                    (value: boolean) => {
+                      if (value) {
+                        console.log('User Updated Successfully');
+                        updateIosContactList();
+                      } else {
+                        console.log('User Not UPdated');
+                        updateIosContactList();
+                      }
+                    },
+                  );
+                }}
+              />
+            </View>
+          </>
+        )}
+        {contactsFromIos.length === 0 && (
+          <Text
+            style={{
+              alignSelf: 'center',
+              fontWeight: '600',
+              fontSize: 20,
+              paddingTop: 20,
+            }}>
+            Empty! Add Contact first
+          </Text>
+        )}
+      </View>
       <FlatList
-        scrollEnabled
         showsVerticalScrollIndicator={false}
         data={Platform.OS === 'ios' ? contactsFromIos : contacts}
         renderItem={reanderItem}
         keyExtractor={(_item, index) => String(index)}
-        extraData={selectedId}
+        // extraData={selectedId}
       />
     </View>
   );
