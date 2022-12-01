@@ -86,4 +86,45 @@ class EditContacts: NSObject{
       }
     
   }
+  
+  @objc func updateContacts(_ contactName: String, contactNumber: String, callback:RCTResponseSenderBlock){
+    
+    let predicate = CNContact.predicateForContacts(matchingName: contactName);
+
+    do{
+      let contacts = try store.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey as CNKeyDescriptor])
+      guard contacts.count > 0 else{
+        print("No contacts found")
+        return
+      }
+
+      guard let contact = contacts.first else{ return }
+
+      let req = CNSaveRequest()
+      
+      let newNumber = contact.mutableCopy() as! CNMutableContact
+
+
+      let newPhoneNumber = CNLabeledValue(
+          label:CNLabelPhoneNumberMobile,
+          value:CNPhoneNumber(stringValue:contactNumber))
+
+
+      newNumber.phoneNumbers.append(newPhoneNumber)
+      
+      
+      req.update(newNumber)
+
+      do{
+        try store.execute(req)
+        callback([true])
+      } catch _{
+        callback([false])
+      }
+    } catch let err{
+       print(err)
+    }
+  
+    }
+
 }
