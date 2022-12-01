@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inputs"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="362dp"
+        android:layout_height="82dp"
+        android:ems="10"
+        android:hint="@string/enter_display_name"
+        android:inputType="textPersonName"
+        android:translationX="@dimen/autofill_inline_suggestion_icon_size"
+        android:translationY="@dimen/autofill_inline_suggestion_icon_size"
+        android:autofillHints="" />
+
+    <EditText
+        android:id="@+id/editTextNumber"
+        android:layout_width="362dp"
+        android:layout_height="96dp"
+        android:ems="10"
+        android:hint="@string/enter_number_to_update"
+        android:inputType="number"
+        android:translationX="@dimen/autofill_inline_suggestion_icon_size"
+        android:translationY="@dimen/autofill_inline_suggestion_icon_size"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="363dp"
+        android:layout_height="80dp"
+        android:onClick="buttonUpdateContact"
+        android:text="@string/update_contact"
+        android:translationX="@dimen/autofill_inline_suggestion_icon_size"
+        android:backgroundTint="#ff4081"
+        android:translationY="@android:dimen/app_icon_size" />
+
+</LinearLayout>
