@@ -1,5 +1,5 @@
 import React from 'react';
-import {PermissionsAndroid, SafeAreaView} from 'react-native';
+import {PermissionsAndroid, Platform, SafeAreaView} from 'react-native';
 import TodoScreen from './Screens/Todo';
 import store from './redux/store';
 import {Provider} from 'react-redux';
@@ -49,8 +49,11 @@ const requestContactWritePermission = async () => {
 
 const App = () => {
   const RootApp = () => {
-    requestContactReadPermission();
-    requestContactWritePermission();
+    if (Platform.OS === 'android') {
+      requestContactReadPermission();
+      requestContactWritePermission();
+    }
+
     return (
       <SafeAreaView>
         <TodoScreen />
