@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {SetStateAction} from 'react';
 import {
   Button,
   FlatList,
@@ -85,15 +85,17 @@ const Todo = () => {
   };
 
   const updateIosContactList = () => {
-    NativeModules?.EditContacts?.fetchContacts((value: any) =>
-      setContactFromIos(value),
+    NativeModules?.EditContacts?.fetchContacts(
+      (value: SetStateAction<never[]>) => setContactFromIos(value),
     );
   };
 
   const updateAndroidContactList = () => {
-    NativeModules?.FetchContacts?.fetchContactsAndroid((value: any) => {
-      setContactFromAndroid(value);
-    });
+    NativeModules?.FetchContacts?.fetchContactsAndroid(
+      (value: SetStateAction<never[]>) => {
+        setContactFromAndroid(value);
+      },
+    );
   };
 
   const reanderItem = ({item}: any) => {
@@ -114,18 +116,15 @@ const Todo = () => {
       if (Platform.OS === 'android') {
         onPressDeleteAndroid();
       } else {
-        NativeModules?.EditContacts?.deleteContacts(
-          item?.name,
-          (value: any) => {
-            if (value) {
-              console.log('DELTED');
-              updateIosContactList();
-            } else {
-              console.log('NOT DELETED');
-              updateIosContactList();
-            }
-          },
-        );
+        NativeModules?.EditContacts?.deleteContacts(item?.name, (value: []) => {
+          if (value) {
+            console.log('DELTED');
+            updateIosContactList();
+          } else {
+            console.log('NOT DELETED');
+            updateIosContactList();
+          }
+        });
       }
     };
 
@@ -189,7 +188,7 @@ const Todo = () => {
       NativeModules.EditContacts.addUserToContact(
         myName.length === 0 ? 'No name' : myName,
         myNumber.length === 0 ? 'No Number' : myNumber,
-        (value: any) => {
+        (value: []) => {
           if (value) {
             console.log('User Added Successfully');
             updateIosContactList();
