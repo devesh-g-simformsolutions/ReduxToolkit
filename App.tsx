@@ -1,8 +1,11 @@
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {PermissionsAndroid, Platform, SafeAreaView} from 'react-native';
-import TodoScreen from './Screens/Todo';
-import store from './redux/store';
+import {PermissionsAndroid, Platform} from 'react-native';
 import {Provider} from 'react-redux';
+import store from './redux/store';
+import ContactScreen from './Screens/ContactScreen';
+import DetailScreen from './Screens/DetailScreen';
 
 const requestContactReadPermission = async () => {
   try {
@@ -47,23 +50,40 @@ const requestContactWritePermission = async () => {
   }
 };
 
-const App = () => {
-  const RootApp = () => {
-    if (Platform.OS === 'android') {
-      requestContactReadPermission();
-      requestContactWritePermission();
-    }
+const Stack = createNativeStackNavigator();
 
-    return (
-      <SafeAreaView>
-        <TodoScreen />
-      </SafeAreaView>
-    );
-  };
+const App = () => {
+  if (Platform.OS === 'android') {
+    requestContactReadPermission();
+    requestContactWritePermission();
+  }
 
   return (
     <Provider store={store}>
-      <RootApp />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="ContactScreen">
+          <Stack.Screen
+            name="ContactScreen"
+            component={ContactScreen as any}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DetailScreen"
+            component={DetailScreen}
+            options={{
+              headerBackTitle: 'Back',
+              headerTintColor: 'white',
+              headerStyle: {backgroundColor: '#1a1b1e'},
+              title: 'Contact Details',
+              headerTitleStyle: {
+                color: 'white',
+                fontWeight: '800',
+                fontSize: 20,
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 };
