@@ -19,4 +19,10 @@ RCT_EXTERN_METHOD(addUserToContact:(NSString*)contactName contactNumber:(NSStrin
 
 RCT_EXTERN_METHOD(updateContacts:(NSString*)contactName contactNumber:(NSString*)contactNumber callback:(RCTResponseSenderBlock)callback)
 
+RCT_EXTERN_METHOD(dialNumber:(NSString*)contactNumber)
+
+RCT_EXTERN_METHOD(messageToNumber:(NSString*)contactNumber message:(NSString*)message)
+
+RCT_EXTERN_METHOD(videoCall:(NSString*)contactNumber)
+
 @end

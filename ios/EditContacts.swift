@@ -126,5 +126,35 @@ class EditContacts: NSObject{
     }
   
     }
+  
+  @objc func dialNumber(_ contactNumber: String) {
+    let tPhoneNumber = contactNumber
+    if let url = URL(string: "tel://"+tPhoneNumber) {
+      DispatchQueue.main.async {
+        UIApplication.shared.open(url)
+        }
+     }
+  }
+  
+  @objc func messageToNumber(_ contactNumber:String, message: String){
+    
+    let mPhoneNumber = contactNumber
+    let mMessage = message.replacingOccurrences(of: " ", with: "%20")
+    if let url = URL(string: "sms://"+mPhoneNumber+"&body="+mMessage) {
+      DispatchQueue.main.async {
+        UIApplication.shared.open(url)
+      }
+    }
+  }
+  
+  @objc func videoCall(_ contactNumber:String){
+      if let facetimeURL:NSURL = NSURL(string: "facetime://\(contactNumber)") {
+        let application:UIApplication = UIApplication.shared
+        if (application.canOpenURL(facetimeURL as URL)) {
+          application.open(facetimeURL as URL);
+        }
+      }
+
+  }
 
 }

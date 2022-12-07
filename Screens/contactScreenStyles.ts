@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 10,
     alignItems: 'center',
+    paddingTop: Platform.OS === 'android' ? 0 : 25,
   },
   headerContainerContactList: {
     width: '100%',
@@ -157,6 +158,23 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   deleteEditContainer: {flexDirection: 'row'},
+  circleContainer: {flexDirection: 'row'},
+  circleStyle: {
+    backgroundColor: '#1a1b1e',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    marginRight: 10,
+    justifyContent: 'center',
+  },
+  circleTextStyle: {
+    color: 'white',
+    fontSize: 35,
+    alignSelf: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default styles;

@@ -13,7 +13,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		35E0C1CCCA4EE03FC093E48E /* libPods-ReduxToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F158FF281F9A8E41507637EB /* libPods-ReduxToolkit.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		BA0ADA5C29372BE400FFA094 /* ContactStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0ADA5B29372BE400FFA094 /* ContactStruct.swift */; };
 		BAD8CF9B2935E252002740F8 /* EditContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD8CF9A2935E252002740F8 /* EditContacts.swift */; };
 		BAD8CF9D2935E31C002740F8 /* EditContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = BAD8CF9C2935E31C002740F8 /* EditContacts.m */; };
 		FF0D2A08A59B232C5FC8E844 /* libPods-ReduxToolkit-ReduxToolkitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 799C042708CC1A28FC3BCA46 /* libPods-ReduxToolkit-ReduxToolkitTests.a */; };
@@ -43,7 +42,6 @@
 		5227D4FAAF7AD0D64277EEEA /* Pods-ReduxToolkit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReduxToolkit.debug.xcconfig"; path = "Target Support Files/Pods-ReduxToolkit/Pods-ReduxToolkit.debug.xcconfig"; sourceTree = "<group>"; };
 		799C042708CC1A28FC3BCA46 /* libPods-ReduxToolkit-ReduxToolkitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReduxToolkit-ReduxToolkitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReduxToolkit/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		BA0ADA5B29372BE400FFA094 /* ContactStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactStruct.swift; sourceTree = "<group>"; };
 		BAD8CF992935E251002740F8 /* ReduxToolkit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReduxToolkit-Bridging-Header.h"; sourceTree = "<group>"; };
 		BAD8CF9A2935E252002740F8 /* EditContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContacts.swift; sourceTree = "<group>"; };
 		BAD8CF9C2935E31C002740F8 /* EditContacts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditContacts.m; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 				BAD8CF9A2935E252002740F8 /* EditContacts.swift */,
 				BAD8CF992935E251002740F8 /* ReduxToolkit-Bridging-Header.h */,
 				BAD8CF9C2935E31C002740F8 /* EditContacts.m */,
-				BA0ADA5B29372BE400FFA094 /* ContactStruct.swift */,
 			);
 			name = ReduxToolkit;
 			sourceTree = "<group>";
@@ -425,7 +422,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				BA0ADA5C29372BE400FFA094 /* ContactStruct.swift in Sources */,
 				BAD8CF9D2935E31C002740F8 /* EditContacts.m in Sources */,
 				BAD8CF9B2935E252002740F8 /* EditContacts.swift in Sources */,
 			);
