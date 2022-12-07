@@ -3,7 +3,6 @@ import {
   Button,
   FlatList,
   Platform,
-  SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -214,16 +213,26 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
                 Platform.OS === 'ios' ? item?.number : ContactData.mobile,
             } as any);
           }}>
-          <View>
-            <Text style={[styles.renderItemNameInputStyle]}>
-              {Platform.OS === 'ios' ? item?.name : ContactData.name}
-            </Text>
-            <Text
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={[styles.renderItemNameInputStyle, {fontWeight: '600'}]}>
-              {Platform.OS === 'ios' ? item?.number : ContactData.mobile}
-            </Text>
+          <View style={styles.circleContainer}>
+            <View style={styles.circleStyle}>
+              <Text style={styles.circleTextStyle}>
+                {Platform.OS === 'ios'
+                  ? item.name[0].toUpperCase()
+                  : ContactData.name[0].toUpperCase()}
+              </Text>
+            </View>
+            <View>
+              <Text style={[styles.renderItemNameInputStyle]}>
+                {Platform.OS === 'ios' ? item?.name : ContactData.name}
+              </Text>
+              <Text
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={[styles.renderItemNameInputStyle, {fontWeight: '600'}]}>
+                {Platform.OS === 'ios' ? item?.number : ContactData.mobile}
+              </Text>
+            </View>
           </View>
+
           <View style={styles.deleteEditContainer}>
             <TouchableOpacity
               // eslint-disable-next-line react-native/no-inline-styles
@@ -332,126 +341,122 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.topViewStyles}>
-        <View>
-          <View style={styles.contentHeaderContainer}>
-            <View style={styles.headerContainerContactList}>
-              <Text style={styles.contactHeaderTextStyle}>Contact List</Text>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => {
-                  Platform.OS === 'ios'
-                    ? onPressAddButtonIos()
-                    : onPressAddContactAndroid();
-                }}>
-                <Icon name="adduser" size={25} color="white" />
-              </TouchableOpacity>
-            </View>
+    <View style={styles.topViewStyles}>
+      <View>
+        <View style={styles.contentHeaderContainer}>
+          <View style={styles.headerContainerContactList}>
+            <Text style={styles.contactHeaderTextStyle}>Contact List</Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                Platform.OS === 'ios'
+                  ? onPressAddButtonIos()
+                  : onPressAddContactAndroid();
+              }}>
+              <Icon name="adduser" size={25} color="white" />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={
+              clicked ? styles.container : [styles.container, {width: '100%'}]
+            }>
             <View
               style={
-                clicked ? styles.container : [styles.container, {width: '100%'}]
+                clicked
+                  ? styles.searchBar__clicked
+                  : styles.searchBar__unclicked
               }>
-              <View
-                style={
-                  clicked
-                    ? styles.searchBar__clicked
-                    : styles.searchBar__unclicked
-                }>
-                <Icon
-                  name="search1"
-                  size={20}
-                  color="black"
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  style={{marginLeft: 1}}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Search"
-                  value={search}
-                  onChangeText={text => searchFilter(text)}
-                  onFocus={() => {
-                    setClicked(true);
+              <Icon
+                name="search1"
+                size={20}
+                color="black"
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{marginLeft: 1}}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Search"
+                value={search}
+                onChangeText={text => searchFilter(text)}
+                onFocus={() => {
+                  setClicked(true);
+                }}
+              />
+            </View>
+            {clicked && (
+              // eslint-disable-next-line react-native/no-inline-styles
+              <View style={{marginLeft: 10}}>
+                <Button
+                  title="Cancel"
+                  color={Platform.OS === 'android' ? '#404040' : 'white'}
+                  onPress={() => {
+                    setClicked(false);
+                    Platform.OS === 'ios'
+                      ? setContactFromIos(contactsFromIos)
+                      : setContactFromAndroid(contactsFromAndroid);
+                    updateIosContactList();
+                    updateAndroidContactList();
+                    setSearch('');
                   }}
                 />
               </View>
-              {clicked && (
-                // eslint-disable-next-line react-native/no-inline-styles
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    title="Cancel"
-                    color={Platform.OS === 'android' ? '#404040' : 'white'}
-                    onPress={() => {
-                      setClicked(false);
-                      Platform.OS === 'ios'
-                        ? setContactFromIos(contactsFromIos)
-                        : setContactFromAndroid(contactsFromAndroid);
-                      updateIosContactList();
-                      updateAndroidContactList();
-                      setSearch('');
-                    }}
-                  />
-                </View>
-              )}
+            )}
+          </View>
+        </View>
+        {isAddContactVisible && (
+          <View style={styles.addContactStyle}>
+            <TextInput
+              value={myName}
+              placeholder={'New Contact Name'}
+              onChangeText={text => {
+                setMyName(text);
+              }}
+              style={styles.addContactTextInputStyles}
+              placeholderTextColor={'white'}
+            />
+            <TextInput
+              value={myNumber}
+              keyboardType={'number-pad'}
+              placeholder={'New Contact Number'}
+              onChangeText={text => {
+                setMyNumber(text);
+              }}
+              style={styles.addContactTextInputNumberStyle}
+              placeholderTextColor={'white'}
+            />
+            <View style={styles.buttonStyleAddContactUpdateContact}>
+              <Button
+                color={Platform.OS === 'ios' ? 'white' : 'black'}
+                title={'Add Contact'}
+                onPress={() => onPressAddContactButton()}
+              />
+              <Button
+                color={Platform.OS === 'ios' ? 'white' : 'black'}
+                title={'Cancel'}
+                onPress={() => setIsContactVisible(false)}
+              />
             </View>
           </View>
-          {isAddContactVisible && (
-            <View style={styles.addContactStyle}>
-              <TextInput
-                value={myName}
-                placeholder={'New Contact Name'}
-                onChangeText={text => {
-                  setMyName(text);
-                }}
-                style={styles.addContactTextInputStyles}
-                placeholderTextColor={'white'}
-              />
-              <TextInput
-                value={myNumber}
-                keyboardType={'number-pad'}
-                placeholder={'New Contact Number'}
-                onChangeText={text => {
-                  setMyNumber(text);
-                }}
-                style={styles.addContactTextInputNumberStyle}
-                placeholderTextColor={'white'}
-              />
-              <View style={styles.buttonStyleAddContactUpdateContact}>
-                <Button
-                  color={Platform.OS === 'ios' ? 'white' : 'black'}
-                  title={'Add Contact'}
-                  onPress={() => onPressAddContactButton()}
-                />
-                <Button
-                  color={Platform.OS === 'ios' ? 'white' : 'black'}
-                  title={'Cancel'}
-                  onPress={() => setIsContactVisible(false)}
-                />
-              </View>
-            </View>
-          )}
-          {(Platform.OS === 'ios'
-            ? contactsFromIos.length === 0
-              ? true
-              : false
-            : Object.keys(contactsFromAndroid).length === 0) && (
-            <Text style={styles.textStyleEmptyContact}>
-              Empty! Add Contact first
-            </Text>
-          )}
-        </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={
-            Platform.OS === 'ios'
-              ? contactsFromIos
-              : (contactsFromAndroid as [])
-          }
-          renderItem={reanderItem}
-          keyExtractor={(_item, index) => String(index)}
-        />
+        )}
+        {(Platform.OS === 'ios'
+          ? contactsFromIos.length === 0
+            ? true
+            : false
+          : Object.keys(contactsFromAndroid).length === 0) && (
+          <Text style={styles.textStyleEmptyContact}>
+            Empty! Add Contact first
+          </Text>
+        )}
       </View>
-    </SafeAreaView>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={
+          Platform.OS === 'ios' ? contactsFromIos : (contactsFromAndroid as [])
+        }
+        renderItem={reanderItem}
+        keyExtractor={(_item, index) => String(index)}
+      />
+    </View>
   );
 };
 
