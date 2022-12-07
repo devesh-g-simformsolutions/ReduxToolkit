@@ -8,6 +8,7 @@ import {
   Platform,
   TextInput,
   NativeModules,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -16,6 +17,7 @@ import styles from './contactScreenStyles';
 interface contactIconType {
   iconName: string;
   isRotated?: boolean;
+  onPress?: () => void;
 }
 interface lineSepratorType {
   color?: string;
@@ -31,6 +33,9 @@ const DetailScreen = ({route}: any) => {
   const [isUpdateContactNumberVisible, setIsUpdateContactNumberVisible] =
     React.useState(false);
   const [updatedNumber, setUpdatedNumber] = React.useState(itemNumber);
+  const [messageValue, setMessageValue] = React.useState('');
+  const [isVisibleMessageContainer, setIsVisibleMessageContainer] =
+    React.useState(false);
 
   const LineSeperator = ({color}: lineSepratorType) => {
     return (
@@ -45,10 +50,15 @@ const DetailScreen = ({route}: any) => {
     );
   };
 
-  const ContactIcons = ({iconName, isRotated = false}: contactIconType) => {
+  const ContactIcons = ({
+    iconName,
+    isRotated = false,
+    onPress,
+  }: contactIconType) => {
     return (
       <View style={{alignItems: 'center', flex: 1}}>
         <TouchableOpacity
+          onPress={onPress}
           style={{
             margin: 15,
             padding: 20,
@@ -146,131 +156,225 @@ const DetailScreen = ({route}: any) => {
     }
   };
 
+  const onPressCallButton = () => {
+    if (Platform.OS === 'ios') {
+      NativeModules?.EditContacts?.dialNumber(updatedNumber);
+    } else {
+      let contactShare = {
+        mobile: updatedNumber,
+      };
+      NativeModules.FetchContacts.callContact(contactShare);
+    }
+  };
+
+  const onPressMessageButton = () => {
+    if (isVisibleMessageContainer) {
+      setIsVisibleMessageContainer(false);
+    } else {
+      setIsVisibleMessageContainer(true);
+    }
+  };
+
+  const sendMessage = () => {
+    if (Platform.OS === 'ios') {
+      NativeModules?.EditContacts?.messageToNumber(updatedNumber, messageValue);
+    } else {
+      let contactShare = {
+        message: messageValue,
+        mobile: updatedNumber,
+      };
+      NativeModules.FetchContacts.messageContact(contactShare);
+    }
+    setIsVisibleMessageContainer(false);
+  };
+
+  const onPressVideoCall = () => {
+    if (Platform.OS === 'ios') {
+      // NativeModules?.EditContacts?.messageToNumber(updatedNumber, messageValue);
+    } else {
+      let contactShare = {
+        mobile: updatedNumber,
+      };
+      NativeModules.FetchContacts.videoCall(contactShare);
+    }
+    setIsVisibleMessageContainer(false);
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: '#404040', flex: 1}}>
-      <View>
-        <View
-          style={{
-            backgroundColor: 'black',
-            height: 100,
-            width: 100,
-            alignSelf: 'center',
-            marginTop: '10%',
-            borderRadius: 50,
-            alignItems: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 60,
-              alignSelf: 'center',
-            }}>
-            {itemName[0].toUpperCase()}
-          </Text>
-        </View>
-
-        <View>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 30,
-              alignSelf: 'center',
-              top: 10,
-            }}>
-            {itemName}
-          </Text>
-          <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 30,
-                alignSelf: 'center',
-                top: 10,
-              }}>
-              +91 {updatedNumber}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                if (Platform.OS === 'ios') {
-                  onPressUpdateButton();
-                } else {
-                  onPressUpdateButton();
-                }
-              }}>
-              <Icon
-                name={'edit'}
-                size={30}
-                color="white"
-                style={{alignSelf: 'center', top: 10, left: 10}}
-              />
-            </TouchableOpacity>
-          </View>
-          {Platform.OS === 'android'
-            ? isUpdateContactNumberVisible && (
-                <View>
-                  <View style={styles.updateNumberStyle}>
-                    <TextInput
-                      value={myUpdatedNumber}
-                      keyboardType={'number-pad'}
-                      placeholder={'Add new Contact Number'}
-                      placeholderTextColor={'white'}
-                      onChangeText={text => {
-                        setMyUpdateNumber(text);
-                      }}
-                      style={styles.addButtonTextInputStyle}
-                    />
-                    <TouchableOpacity
-                      onPress={() => onPresUpdateContactButton()}
-                      style={styles.checkIconStyle}>
-                      <Icon name="check" size={25} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )
-            : isUpdateContactNumberVisible && (
-                <View>
-                  <View style={styles.updateNumberStyle}>
-                    <TextInput
-                      value={myUpdatedNumber}
-                      keyboardType={'number-pad'}
-                      placeholder={'Add new Contact Number'}
-                      placeholderTextColor={'white'}
-                      onChangeText={text => {
-                        setMyUpdateNumber(text);
-                      }}
-                      style={styles.addButtonTextInputStyle}
-                    />
-                    <TouchableOpacity
-                      onPress={() => onPresUpdateContactButton()}
-                      style={styles.checkIconStyle}>
-                      <Icon name="check" size={25} color="white" />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-        </View>
-      </View>
-
-      <View style={{flexDirection: 'row'}}>
-        <ContactIcons iconName={'phone'} isRotated={true} />
-        <ContactIcons iconName={'message1'} />
-        <ContactIcons iconName={'videocamera'} />
-      </View>
-
-      <LineSeperator color={'white'} />
       <ScrollView>
-        <ContactInfo
-          iconName={'enviromento'}
-          data={'Nr. Telephone Exchange, Nr. Telephone Exchange, Karelibaug'}
-        />
-        <ContactInfo
-          iconName={'idcard'}
-          data={
-            '212, 5th Floor, Shiv Krupa Commercial Com, Nav Pada, Off Gokhale Road, Thane (west) Behind Indian Bank, Fatehgunj Main Road, Fatehgunj Main Road'
-          }
-        />
+        <KeyboardAvoidingView>
+          <View>
+            <View
+              style={{
+                backgroundColor: 'black',
+                height: 100,
+                width: 100,
+                alignSelf: 'center',
+                marginTop: '10%',
+                borderRadius: 50,
+                alignItems: 'center',
+                alignContent: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 60,
+                  alignSelf: 'center',
+                }}>
+                {itemName[0].toUpperCase()}
+              </Text>
+            </View>
+
+            <View>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 30,
+                  alignSelf: 'center',
+                  top: 10,
+                }}>
+                {itemName}
+              </Text>
+              <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 30,
+                    alignSelf: 'center',
+                    top: 10,
+                  }}>
+                  {updatedNumber}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (Platform.OS === 'ios') {
+                      onPressUpdateButton();
+                    } else {
+                      onPressUpdateButton();
+                    }
+                  }}>
+                  <Icon
+                    name={'edit'}
+                    size={30}
+                    color="white"
+                    style={{alignSelf: 'center', top: 10, left: 10}}
+                  />
+                </TouchableOpacity>
+              </View>
+              {Platform.OS === 'android'
+                ? isUpdateContactNumberVisible && (
+                    <View>
+                      <View style={styles.updateNumberStyle}>
+                        <TextInput
+                          value={myUpdatedNumber}
+                          keyboardType={'number-pad'}
+                          placeholder={'Add new Contact Number'}
+                          placeholderTextColor={'white'}
+                          onChangeText={text => {
+                            setMyUpdateNumber(text);
+                          }}
+                          style={styles.addButtonTextInputStyle}
+                        />
+                        <TouchableOpacity
+                          onPress={() => onPresUpdateContactButton()}
+                          style={styles.checkIconStyle}>
+                          <Icon name="check" size={25} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )
+                : isUpdateContactNumberVisible && (
+                    <View>
+                      <View style={styles.updateNumberStyle}>
+                        <TextInput
+                          value={myUpdatedNumber}
+                          keyboardType={'number-pad'}
+                          placeholder={'Add new Contact Number'}
+                          placeholderTextColor={'white'}
+                          onChangeText={text => {
+                            setMyUpdateNumber(text);
+                          }}
+                          style={styles.addButtonTextInputStyle}
+                        />
+                        <TouchableOpacity
+                          onPress={() => onPresUpdateContactButton()}
+                          style={styles.checkIconStyle}>
+                          <Icon name="check" size={25} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  )}
+            </View>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <ContactIcons
+              iconName={'phone'}
+              isRotated={true}
+              onPress={() => onPressCallButton()}
+            />
+            <ContactIcons
+              iconName={'message1'}
+              onPress={() => onPressMessageButton()}
+            />
+            <ContactIcons
+              iconName={'videocamera'}
+              onPress={() => onPressVideoCall()}
+            />
+          </View>
+          {isVisibleMessageContainer && (
+            <KeyboardAvoidingView
+              style={{
+                backgroundColor: '#1a1b1e',
+                marginTop: 20,
+                marginHorizontal: 20,
+                borderRadius: 20,
+                minHeight: '15%',
+                padding: 3,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <TextInput
+                  style={{
+                    maxWidth: '75%',
+                    minWidth: '75%',
+                    color: 'white',
+                    fontSize: 20,
+                    marginHorizontal: 10,
+                  }}
+                  placeholder="Message"
+                  placeholderTextColor={'white'}
+                  multiline={true}
+                  editable={true}
+                  numberOfLines={5}
+                  keyboardType="default"
+                  value={messageValue}
+                  onChangeText={text => setMessageValue(text)}
+                />
+              </View>
+              <TouchableOpacity
+                style={{alignSelf: 'center', margin: 20}}
+                onPress={() => sendMessage()}>
+                <Icon name={'upcircle'} size={30} color="orange" />
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          )}
+          <LineSeperator color={'white'} />
+
+          <ContactInfo
+            iconName={'enviromento'}
+            data={'Nr. Telephone Exchange, Nr. Telephone Exchange, Karelibaug'}
+          />
+          <ContactInfo
+            iconName={'idcard'}
+            data={
+              '212, 5th Floor, Shiv Krupa Commercial Com, Nav Pada, Off Gokhale Road, Thane (west) Behind Indian Bank, Fatehgunj Main Road, Fatehgunj Main Road'
+            }
+          />
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
   );

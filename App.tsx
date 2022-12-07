@@ -12,8 +12,29 @@ const requestContactReadPermission = async () => {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
       {
-        title: 'Redux Toolkit App contacts Permission',
-        message: 'Redux Toolkit App needs access to your contacts ',
+        title: 'Contact App contacts Permission',
+        message: 'Contact App needs access to your contacts ',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can use the contacts');
+    } else {
+      console.log('contacts permission denied');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};
+const requestCallPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+      {
+        title: 'Contact App call Permission',
+        message: 'Contact App needs access to your calling ',
         buttonNeutral: 'Ask Me Later',
         buttonNegative: 'Cancel',
         buttonPositive: 'OK',
@@ -33,8 +54,8 @@ const requestContactWritePermission = async () => {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
       {
-        title: 'Redux Toolkit App contacts Permission',
-        message: 'Redux Toolkit App needs access to your contacts ',
+        title: 'Contact App contacts Permission',
+        message: 'Contact App needs access to your contacts ',
         buttonNeutral: 'Ask Me Later',
         buttonNegative: 'Cancel',
         buttonPositive: 'OK',
@@ -56,6 +77,7 @@ const App = () => {
   if (Platform.OS === 'android') {
     requestContactReadPermission();
     requestContactWritePermission();
+    requestCallPermission();
   }
 
   return (

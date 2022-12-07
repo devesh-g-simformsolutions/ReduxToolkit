@@ -3,6 +3,7 @@ package com.ReduxToolkit;
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
@@ -168,6 +169,41 @@ public class ReactNativeFetchContactModule extends ReactContextBaseJavaModule {
             System.out.println(e.getStackTrace());
         } finally {
             cur.close();
+        }
+    }
+
+    @ReactMethod
+    public void messageContact(ReadableMap redableMap) {
+        String numberCall = redableMap.getString("mobile");
+        String numberSms = redableMap.getString("message");
+
+        Uri sms_uri = Uri.parse(String.format("smsto:%s",numberCall));
+        Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
+        sms_intent.putExtra("sms_body", numberSms);
+        getCurrentActivity().startActivity(sms_intent);
+
+    }
+
+    @ReactMethod
+    public void callContact(ReadableMap redableMap) {
+        String numberCall = redableMap.getString("mobile");
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(String.format("tel:%s",numberCall)));
+        getCurrentActivity().startActivity(callIntent);
+    }
+
+    @ReactMethod
+    public void videoCall(ReadableMap redableMap){
+        String numberCall = redableMap.getString("mobile");
+        Uri data = Uri.parse("tel:"+numberCall);
+
+        Intent videoCall = new Intent("com.android.phone.videocall");
+        videoCall.putExtra("videoCall", true);
+        videoCall.setData(data);
+        try{
+            getCurrentActivity().startActivity(videoCall);
+        }catch(Exception e){
+            System.out.println(e.getStackTrace());
         }
     }
 }
