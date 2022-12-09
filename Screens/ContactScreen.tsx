@@ -13,6 +13,8 @@ import {NativeModules} from 'react-native';
 import styles from './contactScreenStyles';
 import type {HomeTabScreenProps} from '../navigation/NavigationTypes';
 
+const PlatformIOS = Platform.OS === 'ios';
+
 const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
   const [myName, setMyName] = React.useState('');
   const [myNumber, setMyNumber] = React.useState('');
@@ -29,8 +31,6 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
   const [dummyIosData, setDummyIosData] = React.useState([]);
 
   React.useEffect(() => {
-    // updateAndroidContactList();
-    // updateIosContactList();
     const unsubscribe = navigation.addListener('focus', () => {
       updateAndroidContactList();
       updateIosContactList();
@@ -40,30 +40,29 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
 
   const searchFilter = (text: string) => {
     if (text) {
-      const newData =
-        Platform.OS === 'ios'
-          ? dummyIosData.filter((item: any) => {
-              const itemDataIos = item?.name
-                ? item.name.toUpperCase()
-                : ''.toUpperCase();
-              const textData = text.toUpperCase();
-              return itemDataIos.indexOf(textData) > -1;
-            })
-          : dummyAndroidData.filter((item: any) => {
-              const ContactData = Platform.OS === 'android' && JSON.parse(item);
-              const itemDataAndroid = ContactData?.name
-                ? ContactData?.name.toUpperCase()
-                : ''.toUpperCase();
-              const textData = text.toUpperCase();
-              return itemDataAndroid.indexOf(textData) > -1;
-            });
+      const newData = PlatformIOS
+        ? dummyIosData.filter((item: any) => {
+            const itemDataIos = item?.name
+              ? item.name.toUpperCase()
+              : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemDataIos.indexOf(textData) > -1;
+          })
+        : dummyAndroidData.filter((item: any) => {
+            const ContactData = Platform.OS === 'android' && JSON.parse(item);
+            const itemDataAndroid = ContactData?.name
+              ? ContactData?.name.toUpperCase()
+              : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemDataAndroid.indexOf(textData) > -1;
+          });
 
       setSearch(text);
-      Platform.OS === 'ios'
+      PlatformIOS
         ? setContactFromIos(newData as SetStateAction<never[]>)
         : setContactFromAndroid(newData);
     } else {
-      Platform.OS === 'ios'
+      PlatformIOS
         ? setContactFromIos(dummyIosData)
         : setContactFromAndroid(dummyAndroidData);
 
@@ -208,27 +207,31 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
           style={styles.renderItemTopViewStyle}
           onPress={() => {
             navigation.navigate('DetailScreen', {
-              itemName: Platform.OS === 'ios' ? item?.name : ContactData.name,
-              itemNumber:
-                Platform.OS === 'ios' ? item?.number : ContactData.mobile,
+              itemName: PlatformIOS ? item?.name : ContactData.name,
+              itemNumber: PlatformIOS ? item?.number : ContactData.mobile,
+              itemStreet: PlatformIOS ? item?.street : ContactData.street,
+              itemCity: PlatformIOS ? item?.city : ContactData.city,
+              itemCountry: PlatformIOS ? item?.country : ContactData.country,
+              itemZip: PlatformIOS ? item?.postalCode : ContactData.postalCode,
+              itemState: PlatformIOS ? item?.state : ContactData.state,
             } as any);
           }}>
           <View style={styles.circleContainer}>
             <View style={styles.circleStyle}>
               <Text style={styles.circleTextStyle}>
-                {Platform.OS === 'ios'
+                {PlatformIOS
                   ? item.name[0].toUpperCase()
-                  : ContactData.name[0].toUpperCase()}
+                  : ContactData?.name?.[0]?.toUpperCase()}
               </Text>
             </View>
             <View>
               <Text style={[styles.renderItemNameInputStyle]}>
-                {Platform.OS === 'ios' ? item?.name : ContactData.name}
+                {PlatformIOS ? item?.name : ContactData.name}
               </Text>
               <Text
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={[styles.renderItemNameInputStyle, {fontWeight: '600'}]}>
-                {Platform.OS === 'ios' ? item?.number : ContactData.mobile}
+                {PlatformIOS ? item?.number : ContactData.mobile}
               </Text>
             </View>
           </View>
@@ -239,7 +242,7 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
               style={{paddingHorizontal: 20}}
               activeOpacity={0.5}
               onPress={() => {
-                if (Platform.OS === 'ios') {
+                if (PlatformIOS) {
                   setSelectedId(item.name);
                   onPressUpdateButtonIos();
                 } else {
@@ -349,7 +352,7 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                Platform.OS === 'ios'
+                PlatformIOS
                   ? onPressAddButtonIos()
                   : onPressAddContactAndroid();
               }}>
@@ -391,7 +394,7 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
                   color={Platform.OS === 'android' ? '#404040' : 'white'}
                   onPress={() => {
                     setClicked(false);
-                    Platform.OS === 'ios'
+                    PlatformIOS
                       ? setContactFromIos(contactsFromIos)
                       : setContactFromAndroid(contactsFromAndroid);
                     updateIosContactList();
@@ -426,19 +429,19 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
             />
             <View style={styles.buttonStyleAddContactUpdateContact}>
               <Button
-                color={Platform.OS === 'ios' ? 'white' : 'black'}
+                color={PlatformIOS ? 'white' : 'black'}
                 title={'Add Contact'}
                 onPress={() => onPressAddContactButton()}
               />
               <Button
-                color={Platform.OS === 'ios' ? 'white' : 'black'}
+                color={PlatformIOS ? 'white' : 'black'}
                 title={'Cancel'}
                 onPress={() => setIsContactVisible(false)}
               />
             </View>
           </View>
         )}
-        {(Platform.OS === 'ios'
+        {(PlatformIOS
           ? contactsFromIos.length === 0
             ? true
             : false
@@ -450,11 +453,14 @@ const ContactScreen = ({navigation}: HomeTabScreenProps<'ContactScreen'>) => {
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={
-          Platform.OS === 'ios' ? contactsFromIos : (contactsFromAndroid as [])
-        }
+        data={PlatformIOS ? contactsFromIos : (contactsFromAndroid as [])}
         renderItem={reanderItem}
         keyExtractor={(_item, index) => String(index)}
+        removeClippedSubviews={true}
+        initialNumToRender={2}
+        maxToRenderPerBatch={1}
+        updateCellsBatchingPeriod={100}
+        windowSize={7}
       />
     </View>
   );

@@ -18,13 +18,21 @@ class EditContacts: NSObject{
   @objc func fetchContacts(_ resolve: RCTResponseSenderBlock){
     
     let predicate = CNContact.predicateForContactsInContainer(withIdentifier: store.defaultContainerIdentifier())
-    let contact = try! store.unifiedContacts(matching: predicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor, CNContactPhoneNumbersKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor])
+    let contact = try! store.unifiedContacts(matching: predicate, keysToFetch: [CNContactGivenNameKey as CNKeyDescriptor, CNContactPhoneNumbersKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactPostalAddressesKey as CNKeyDescriptor])
   
         
     let result: NSMutableArray = []
     for item in contact{
       let yourAuxDic: NSMutableDictionary = [:]
       yourAuxDic["name"] = item.givenName + " " + item.familyName
+      
+      for add in item.postalAddresses{
+        yourAuxDic["street"] = add.value.street
+        yourAuxDic["city"] = add.value.city
+        yourAuxDic["country"] = add.value.country
+        yourAuxDic["postalCode"] = add.value.postalCode
+        yourAuxDic["state"] = add.value.state
+      }
       for num in item.phoneNumbers{
         yourAuxDic["number"] = num.value.stringValue
       }
@@ -109,7 +117,7 @@ class EditContacts: NSObject{
           label:CNLabelPhoneNumberMobile,
           value:CNPhoneNumber(stringValue:contactNumber))
 
-
+      newNumber.phoneNumbers.removeAll()
       newNumber.phoneNumbers.append(newPhoneNumber)
       
       
@@ -156,5 +164,74 @@ class EditContacts: NSObject{
       }
 
   }
+  
+  @objc func addAddress(_ contactName: String, streetName: String,cityName: String, stateName: String, zipCode: String, countryName: String, callback:RCTResponseSenderBlock) {
+    
+    
+    let predicate = CNContact.predicateForContacts(matchingName: contactName);
 
+    do{
+      let contacts = try store.unifiedContacts(matching: predicate, keysToFetch: [CNContactPostalAddressesKey as CNKeyDescriptor])
+      guard contacts.count > 0 else{
+        print("No contacts found")
+        return
+      }
+
+      guard let contact = contacts.first else{ return }
+
+      let req = CNSaveRequest()
+      
+      let newAddress = contact.mutableCopy() as! CNMutableContact
+
+
+      let address = CNMutablePostalAddress()
+      address.street = streetName
+      address.city = cityName
+      address.state = stateName
+      address.postalCode = zipCode
+      address.country = countryName
+      let home = CNLabeledValue<CNPostalAddress>(label:CNLabelHome, value:address)
+
+      newAddress.postalAddresses.removeAll()
+      newAddress.postalAddresses.append(home)
+      
+      
+      req.update(newAddress)
+
+      do{
+        try store.execute(req)
+        callback([true])
+      } catch _{
+        callback([false])
+      }
+    } catch let err{
+       print(err)
+    }
+    
+    
+    
+    
+    
+//    let contact = CNMutableContact()
+//    contact.givenName = contactName
+//    // Address
+//    let address = CNMutablePostalAddress()
+//    address.street = streetName
+//    address.city = cityName
+//    address.state = stateName
+//    address.postalCode = zipCode
+//    address.country = countryName
+//    let home = CNLabeledValue<CNPostalAddress>(label:CNLabelHome, value:address)
+//    contact.postalAddresses = [home]
+//    // Save
+//    let saveRequest = CNSaveRequest()
+//    saveRequest.add(contact, toContainerWithIdentifier: nil)
+//    try? store.execute(saveRequest)
+
+    
+
+    print(CNMutablePostalAddress().self);
+ 
+
+  }
 }
