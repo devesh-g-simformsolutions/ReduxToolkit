@@ -15,6 +15,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		BAD8CF9B2935E252002740F8 /* EditContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD8CF9A2935E252002740F8 /* EditContacts.swift */; };
 		BAD8CF9D2935E31C002740F8 /* EditContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = BAD8CF9C2935E31C002740F8 /* EditContacts.m */; };
+		BAE394A42941C79100F55D6D /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAE394A32941C79100F55D6D /* AuthenticationServices.framework */; };
 		FF0D2A08A59B232C5FC8E844 /* libPods-ReduxToolkit-ReduxToolkitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 799C042708CC1A28FC3BCA46 /* libPods-ReduxToolkit-ReduxToolkitTests.a */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,8 @@
 		BAD8CF992935E251002740F8 /* ReduxToolkit-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReduxToolkit-Bridging-Header.h"; sourceTree = "<group>"; };
 		BAD8CF9A2935E252002740F8 /* EditContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContacts.swift; sourceTree = "<group>"; };
 		BAD8CF9C2935E31C002740F8 /* EditContacts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditContacts.m; sourceTree = "<group>"; };
+		BAE394A22941C79100F55D6D /* ReduxToolkit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ReduxToolkit.entitlements; path = ReduxToolkit/ReduxToolkit.entitlements; sourceTree = "<group>"; };
+		BAE394A32941C79100F55D6D /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		DA6F133890167F8C064E50D9 /* Pods-ReduxToolkit-ReduxToolkitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReduxToolkit-ReduxToolkitTests.release.xcconfig"; path = "Target Support Files/Pods-ReduxToolkit-ReduxToolkitTests/Pods-ReduxToolkit-ReduxToolkitTests.release.xcconfig"; sourceTree = "<group>"; };
 		E5A5A1C4D1D7BC4285C6982F /* Pods-ReduxToolkit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReduxToolkit.release.xcconfig"; path = "Target Support Files/Pods-ReduxToolkit/Pods-ReduxToolkit.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -64,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAE394A42941C79100F55D6D /* AuthenticationServices.framework in Frameworks */,
 				35E0C1CCCA4EE03FC093E48E /* libPods-ReduxToolkit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,6 +95,7 @@
 		13B07FAE1A68108700A75B9A /* ReduxToolkit */ = {
 			isa = PBXGroup;
 			children = (
+				BAE394A22941C79100F55D6D /* ReduxToolkit.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -107,6 +112,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BAE394A32941C79100F55D6D /* AuthenticationServices.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				F158FF281F9A8E41507637EB /* libPods-ReduxToolkit.a */,
 				799C042708CC1A28FC3BCA46 /* libPods-ReduxToolkit-ReduxToolkitTests.a */,
@@ -497,6 +503,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ReduxToolkit/ReduxToolkit.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ReduxToolkit/Info.plist;
@@ -525,6 +532,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ReduxToolkit/ReduxToolkit.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = ReduxToolkit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;

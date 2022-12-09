@@ -25,4 +25,6 @@ RCT_EXTERN_METHOD(messageToNumber:(NSString*)contactNumber message:(NSString*)me
 
 RCT_EXTERN_METHOD(videoCall:(NSString*)contactNumber)
 
+RCT_EXTERN_METHOD(addAddress:(NSString*)contactName streetName:(NSString*)streetName cityName: (NSString*)cityName  stateName: (NSString*)stateName zipCode: (NSString*)zipCode countryName: (NSString*)countryName callback:(RCTResponseSenderBlock)callback)
+
 @end
